@@ -1,0 +1,409 @@
+/*
+Basic Robot Grammar
+Author: Miguel Parra- Daniel  Londoño
+//danielslondonob
+ **/
+
+options 
+{
+	LOOKAHEAD=1; 
+	IGNORE_CASE=true;
+	STATIC = false;
+	
+}
+   
+   
+PARSER_BEGIN(RobotParser)
+
+package uniandes.lym.robot.control;
+
+import uniandes.lym.robot.kernel.*;
+import java.io.*;
+
+
+@SuppressWarnings("serial")
+public class RobotParser 
+{
+
+
+	private RobotWorldDec robotw;
+	
+	
+	void setWorld(RobotWorld w) {
+		robotw = (RobotWorldDec) w;	
+	}
+
+    void delay(int d) {
+				try {
+	    			        Thread.sleep(d);
+	    			    } catch (InterruptedException e) {
+	    			        System.err.format("IOException: %s%n", e);
+	    			    }
+
+    }  
+	
+}
+PARSER_END(RobotParser)
+
+SKIP:
+{
+	  
+ "  "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN: /* Command  names */
+{
+
+			<T_MOVE:  "Move">
+		| 	<T_TURNRIGHT: "TURNRIGHT">
+		| 	<T_PUTB: "PutB">
+		| 	<T_PICKB: "PickB">
+		| 	<T_PUTC: "PutC">
+		| 	<T_PICKC: "PickC">
+		
+
+}
+
+TOKEN: /*Palabras clave*/
+{
+ 	< ROBOT_R: "ROBOT_R">
+	|< VARS: "VARS" > 
+	| < BEGIN: "BEGIN">
+  	| < END: "END">
+  	| < Balloons :"Balloons" >
+  	| < Chips :"Chips" >
+  	| < skip:"skip" >
+  	
+}
+TOKEN: /*Control Estructure*/
+{
+  	 
+	< THEN:"then" >
+	
+	|<DO:"do" >
+	|< REPEAT :"repeat" >
+	|< TIMES: "times" >
+	|< IF:"if" >
+	|<WHILE:"while" >
+	|< ELSE:"else" >
+	   
+}
+ TOKEN: /*comandos*/
+{
+ 	< assing: "assing">
+	| < move: "move">
+  	| < turn: "turn">
+  	| < face:"face">
+  	| < put: "put" >
+  	| < pick:"pick" >
+  	| < to:"to" >
+  	| < of:"of" >
+  	| < toThe:"toThe">
+  	| < inDir:"inDir" >
+}
+TOKEN: /*direcciones*/
+
+{
+  <rigth:"rigth">
+  |< left:"left" >
+  |< around: "around" >
+  | < north:"north" >
+  | < south:"south" >
+  | < east: "east" >
+  | < west: "west" >
+}
+
+TOKEN: /*Condiciones*/
+{
+  	< facing:"facing" >
+	|< canPut:"canPut" >
+	|<canPick: "canPick" >
+	|< canMove:"canMove" >
+	|< not:"not" >    
+  	
+}
+
+TOKEN: /*nombres*/
+{
+ < name:["A"-"Z"] (["a"-"z"]["0"-"9"])* >
+| < numero:["0"-"9"] (["0"-"9"])* >
+}
+ 
+
+	boolean instructions(StringBuffer system) :
+	{	
+				String output=new String();
+		
+	}
+	{
+	  secuencia()
+	}
+	
+void secuencia():
+{
+ 
+  Variable [] store = Variable[100];
+ 
+	     
+}
+{
+  < ROBOT_R><VARS >var() instrucion()
+}
+void var():
+{
+
+}
+{
+  < name>","(< name >)*
+  //TODO logic
+  {
+    
+  }
+
+}
+void instrucion():
+{
+}
+{
+ < BEGIN >intru()";"(intru())*  
+}
+void intru():
+{
+}
+{
+  (command() |controlStructure())
+}
+void command():
+{
+
+}
+{
+ assing()
+ |move()
+ |turn()
+ |face()
+ |put()
+ |pick()
+ |moveTD()
+
+ |< skip >
+ //TODO logica skip
+ { }   
+}
+void assing():
+{
+  int numero = 0;
+  Token tokenNombre; 
+  Token tokenNumero;
+  String nombre;
+
+}
+{
+ < assing >":"< numero> < to>":"< name >
+ (tokenNombre=<numero>)
+ (tokenNumero=<name>)   
+ 
+ {
+    
+	try
+	{
+	  pNumero = Integer.parseInt(tokenNumero);
+	  
+	  Variable vacia = new Variable(pNumero, tokenNombre );
+
+	  for(int i = 0; i < store.length; i++)
+	  {
+	    if( store[i] == null)
+	    {
+	      store[i] = vacia;
+	    }
+	  }
+	  
+	}
+	catch(Exception e)
+	{
+		  
+	}
+	
+	
+} 
+ 
+}
+void move():
+{
+}
+{
+ (< numero>|< name>)
+ //TODO  completar logica
+ {
+ }
+}
+void turn():
+{
+}
+{
+ < turn >":" (< rigth>| < left>| < around >)
+ //TODO  completar logica
+ {
+ }
+}
+void face():
+{
+  
+}
+{
+ < face>":"(< north>| < south>| < east >| < west>)
+ //TODO  completar logica
+ {
+ }
+}
+void put():
+{
+  
+}
+{
+ < put >":"(< numero>|< name>)< of >":"(<Balloons >| < Chips>) 
+ //TODO completar logica
+ {
+   
+ }
+}
+void pick():
+{
+}
+{
+ < pick >":"(< numero>|< name>)< of >":"(<Balloons >| < Chips>) 
+ //TODO completar logica
+ {
+ }
+}
+void moveT():
+{
+}
+{
+ <toThe>":" (< rigth>| < left>| < around >) 
+ //TODO completar logica
+ {
+   
+ }
+}
+void moveD():
+{
+}
+{
+ <inDir>":"(< north>| < south>| < east >| < west>)
+ //TODO completar logica
+ {
+   
+ }
+}
+//Move general
+void moveTD():
+{
+}
+{
+   < move>":"< numero >(moveT()|moveD()|move())
+}
+
+void controlStructure():
+{
+ 	
+}
+{
+ 	conditional()
+	|loop()
+	| RepeatTimes()
+}
+void conditional():
+{
+
+}
+{
+  < IF>":" condicion()< THEN >":"intru() <ELSE > intru()
+  //TODO Completar logica
+  {
+  }
+}
+void loop():
+{
+
+}
+{
+	< WHILE >":"condicion()":" intru()
+	//TODO logica
+	{
+	}
+}
+void RepeatTimes():
+{
+
+}
+{
+  < REPEAT >":" intru()< TIMES>":"(< numero >|< name >)
+ //TODO logica
+{
+}
+}
+
+void condicion():
+{
+}
+{
+  facing()
+  |canPut()
+  |canPick()
+  |canMove()
+  |not() 
+}	
+
+void facing():
+{
+}
+{
+  < facing >":"(< north>| < south>| < east >| < west>)
+  //TODO logica
+  {
+  }
+}
+void canPut():
+{
+}
+{
+  < canPut >":"(< numero >|< name >) < of >":"(<Balloons >| < Chips>)
+  //TODO logica
+  {
+
+  }
+}
+void canPick():
+{
+}
+{
+  < canPick >":"(< numero >|< name >) < of >":"(<Balloons >| < Chips>)
+  //TODO logica
+  {
+
+  }
+}
+void canMove():
+{
+}
+{
+  < canMove >":"(< north>| < south>| < east >| < west>)
+  //TODO logica
+  {
+
+  }
+}
+void not():
+{
+}
+{
+  < not >":" condicion()
+  //TODO logica
+  {
+  }
+}
