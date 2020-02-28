@@ -105,7 +105,7 @@ public interface RobotParserConstants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
-    "\"  \"",
+    "\" \"",
     "\"\\r\"",
     "\"\\t\"",
     "\"\\n\"",

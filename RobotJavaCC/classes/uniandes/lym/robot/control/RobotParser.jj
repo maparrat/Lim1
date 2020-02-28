@@ -80,7 +80,7 @@ PARSER_END(RobotParser)
 SKIP:
 {
 	  
- "  "
+ " "
 | "\r"
 | "\t"
 | "\n"
@@ -184,7 +184,7 @@ void secuencia():
      
 }
 {
-  < ROBOT_R><VARS >var() instrucion()
+  < ROBOT_R>(<VARS >var())? instrucion()
 }
 void var():
 {
@@ -192,7 +192,7 @@ void var():
 }
 {
   
-  varF()","(varF())*
+  varF()(","varF())*
 
 
 
@@ -203,7 +203,7 @@ void varF():
 Token variableToken =  new Token();
 }
 {
-  < name >
+ // < name >
   (variableToken =   < name >)
  {
 	  String cadena  = variableToken.image;
@@ -225,7 +225,7 @@ void instrucion():
 {
 }
 {
- < BEGIN >intru()";"(intru())*  
+ < BEGIN >intru()(";"intru())*  
 }
 void intru():
 {
@@ -260,9 +260,9 @@ void assing():
 
 }
 {
- < assing >":"< numero> < to>":"< name >
- (tokenNombre=<numero>)
- (tokenNumero=<name>)   
+ < assing >":"(tokenNombre=<numero>) < to>":" (tokenNumero=<name>)
+ //(tokenNombre=<numero>)
+ //(tokenNumero=<name>)   
  
  {
     
@@ -298,7 +298,7 @@ void move():
   
 }
 {
- (< numero>|< name>)
+ //(< numero>|< name>)
  (nmovimientos = < numero>|< name>)
 
  {
@@ -336,8 +336,8 @@ void turn():
   Token direccionT = new Token();  
 }
 {
- < turn >":" (< rigth>| < left>| < around >)
- (direccionT = < rigth>| < left>| < around >)
+ < turn >":" (direccionT = < rigth>| < left>| < around >)
+ //(direccionT = < rigth>| < left>| < around >)
 
  {
    String direccion= direccionT.image;
@@ -365,8 +365,8 @@ void face():
   
 }
 {
- < face>":"(< north>| < south>| < east >| < west>)
-  (direccionT = < north>| < south>| < east >| < west>)
+ < face>":"(direccionT = < north>| < south>| < east >| < west>)
+
 
  {
    String direccion= direccionT.image;
@@ -395,9 +395,9 @@ void put():
   Token objetoT = new Token();
 }
 {
- < put >":"(< numero>|< name>)< of >":"(<Balloons >| < Chips>)
- (cantidadT =< numero>|< name> )
- (objetoT = <Balloons >| < Chips>)   
+ < put >":" (cantidadT =< numero>|< name> )< of >":" (objetoT = <Balloons >| < Chips>)
+
+
 
  {
    try
@@ -447,9 +447,8 @@ void pick():
 
 }
 {
- < pick >":"(< numero>|< name>)< of >":"(<Balloons >| < Chips>)
-  (cantidadT =< numero>|< name> )
- (objetoT = <Balloons >| < Chips>)
+ < pick >":"  (cantidadT =< numero>|< name> )< of >":" (objetoT = <Balloons >| < Chips>)
+
 
  {
    try
@@ -496,9 +495,9 @@ void moveT():
   Token direccionT = new Token();
 }
 {
- <toThe>":" (< rigth>| < left>| < around >)
- (direccionT = < rigth>| < left>| < around >)
- //TODO completar logica
+ <toThe>":"(direccionT = < rigth>| < left>| < around >)
+ 
+
  {
 
    if(robotw.getOrientation() == 0)
@@ -529,12 +528,28 @@ void moveT():
 }
 void moveD():
 {
+   Token direccionT = new Token();
 }
 {
- <inDir>":"(< north>| < south>| < east >| < west>)
+ <inDir>":"(direccionT =< north>| < south>| < east >| < west>)
  //TODO completar logica
  {
-   
+   if(direccionT.image.equals("west"))
+   {
+     robotw.moveHorizontally(- eax);
+   }
+   else  if(direccionT.image.equals("east"))
+   {
+     robotw.moveHorizontally(eax);
+   }
+    else if(direccionT.image.equals("north"))
+   {
+     robotw.moveVertically(eax);
+   }
+     else if(direccionT.image.equals("south"))
+   {
+     robotw.moveVertically(-eax);
+   }
  }
 }
 //Move general
@@ -543,13 +558,10 @@ void moveTD():
   Token num = new Token();
 }
 {
-   < move>":"< numero >(moveT()|moveD()|move())
-   (num = < numero>)
-   {
-     eax = Integer.parseInt(num.image);
-   }
+   < move>":"(num = < numero >(moveT()|moveD()|move()))
+  
 }
-
+//----------------------------------------------------------------------------------------------------------------------
 void controlStructure():
 {
  	

@@ -66,31 +66,37 @@ public class RobotParser implements RobotParserConstants {
 
   final public void secuencia() throws ParseException {
     jj_consume_token(ROBOT_R);
-    jj_consume_token(VARS);
-    var();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case VARS:
+      jj_consume_token(VARS);
+      var();
+      break;
+    default:
+      jj_la1[0] = jj_gen;
+      ;
+    }
     instrucion();
   }
 
   final public void var() throws ParseException {
     varF();
-    jj_consume_token(49);
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case name:
+      case 49:
         ;
         break;
       default:
-        jj_la1[0] = jj_gen;
+        jj_la1[1] = jj_gen;
         break label_1;
       }
+      jj_consume_token(49);
       varF();
     }
   }
 
   final public void varF() throws ParseException {
 Token variableToken =  new Token();
-    jj_consume_token(name);
     variableToken = jj_consume_token(name);
           String cadena  = variableToken.image;
    boolean encontro = false;
@@ -109,28 +115,17 @@ Token variableToken =  new Token();
   final public void instrucion() throws ParseException {
     jj_consume_token(BEGIN);
     intru();
-    jj_consume_token(50);
     label_2:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case skip:
-      case REPEAT:
-      case IF:
-      case WHILE:
-      case assing:
-      case move:
-      case turn:
-      case face:
-      case put:
-      case pick:
-      case name:
-      case numero:
+      case 50:
         ;
         break;
       default:
-        jj_la1[1] = jj_gen;
+        jj_la1[2] = jj_gen;
         break label_2;
       }
+      jj_consume_token(50);
       intru();
     }
   }
@@ -154,7 +149,7 @@ Token variableToken =  new Token();
       controlStructure();
       break;
     default:
-      jj_la1[2] = jj_gen;
+      jj_la1[3] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -189,7 +184,7 @@ Token variableToken =  new Token();
 
       break;
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[4] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -202,11 +197,9 @@ Token variableToken =  new Token();
   String nombre;
     jj_consume_token(assing);
     jj_consume_token(51);
-    jj_consume_token(numero);
+    tokenNombre = jj_consume_token(numero);
     jj_consume_token(to);
     jj_consume_token(51);
-    jj_consume_token(name);
-    tokenNombre = jj_consume_token(numero);
     tokenNumero = jj_consume_token(name);
         try
         {
@@ -233,18 +226,6 @@ Token variableToken =  new Token();
 
   final public void move() throws ParseException {
   Token nmovimientos = new Token() ;
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case numero:
-      jj_consume_token(numero);
-      break;
-    case name:
-      jj_consume_token(name);
-      break;
-    default:
-      jj_la1[4] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case numero:
       nmovimientos = jj_consume_token(numero);
@@ -292,21 +273,6 @@ Token variableToken =  new Token();
     jj_consume_token(51);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case rigth:
-      jj_consume_token(rigth);
-      break;
-    case left:
-      jj_consume_token(left);
-      break;
-    case around:
-      jj_consume_token(around);
-      break;
-    default:
-      jj_la1[6] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case rigth:
       direccionT = jj_consume_token(rigth);
       break;
     case left:
@@ -316,7 +282,7 @@ Token variableToken =  new Token();
       jj_consume_token(around);
       break;
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[6] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -345,24 +311,6 @@ Token variableToken =  new Token();
     jj_consume_token(51);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case north:
-      jj_consume_token(north);
-      break;
-    case south:
-      jj_consume_token(south);
-      break;
-    case east:
-      jj_consume_token(east);
-      break;
-    case west:
-      jj_consume_token(west);
-      break;
-    default:
-      jj_la1[8] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case north:
       direccionT = jj_consume_token(north);
       break;
     case south:
@@ -375,7 +323,7 @@ Token variableToken =  new Token();
       jj_consume_token(west);
       break;
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[7] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -405,42 +353,18 @@ Token variableToken =  new Token();
     jj_consume_token(51);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case numero:
-      jj_consume_token(numero);
-      break;
-    case name:
-      jj_consume_token(name);
-      break;
-    default:
-      jj_la1[10] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    jj_consume_token(of);
-    jj_consume_token(51);
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case Balloons:
-      jj_consume_token(Balloons);
-      break;
-    case Chips:
-      jj_consume_token(Chips);
-      break;
-    default:
-      jj_la1[11] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case numero:
       cantidadT = jj_consume_token(numero);
       break;
     case name:
       jj_consume_token(name);
       break;
     default:
-      jj_la1[12] = jj_gen;
+      jj_la1[8] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
+    jj_consume_token(of);
+    jj_consume_token(51);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case Balloons:
       objetoT = jj_consume_token(Balloons);
@@ -449,7 +373,7 @@ Token variableToken =  new Token();
       jj_consume_token(Chips);
       break;
     default:
-      jj_la1[13] = jj_gen;
+      jj_la1[9] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -499,42 +423,18 @@ Token variableToken =  new Token();
     jj_consume_token(51);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case numero:
-      jj_consume_token(numero);
-      break;
-    case name:
-      jj_consume_token(name);
-      break;
-    default:
-      jj_la1[14] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    jj_consume_token(of);
-    jj_consume_token(51);
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case Balloons:
-      jj_consume_token(Balloons);
-      break;
-    case Chips:
-      jj_consume_token(Chips);
-      break;
-    default:
-      jj_la1[15] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case numero:
       cantidadT = jj_consume_token(numero);
       break;
     case name:
       jj_consume_token(name);
       break;
     default:
-      jj_la1[16] = jj_gen;
+      jj_la1[10] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
+    jj_consume_token(of);
+    jj_consume_token(51);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case Balloons:
       objetoT = jj_consume_token(Balloons);
@@ -543,7 +443,7 @@ Token variableToken =  new Token();
       jj_consume_token(Chips);
       break;
     default:
-      jj_la1[17] = jj_gen;
+      jj_la1[11] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -592,21 +492,6 @@ Token variableToken =  new Token();
     jj_consume_token(51);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case rigth:
-      jj_consume_token(rigth);
-      break;
-    case left:
-      jj_consume_token(left);
-      break;
-    case around:
-      jj_consume_token(around);
-      break;
-    default:
-      jj_la1[18] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case rigth:
       direccionT = jj_consume_token(rigth);
       break;
     case left:
@@ -616,7 +501,7 @@ Token variableToken =  new Token();
       jj_consume_token(around);
       break;
     default:
-      jj_la1[19] = jj_gen;
+      jj_la1[12] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -647,11 +532,12 @@ Token variableToken =  new Token();
   }
 
   final public void moveD() throws ParseException {
+   Token direccionT = new Token();
     jj_consume_token(inDir);
     jj_consume_token(51);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case north:
-      jj_consume_token(north);
+      direccionT = jj_consume_token(north);
       break;
     case south:
       jj_consume_token(south);
@@ -663,11 +549,26 @@ Token variableToken =  new Token();
       jj_consume_token(west);
       break;
     default:
-      jj_la1[20] = jj_gen;
+      jj_la1[13] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
-
+   if(direccionT.image.equals("west"))
+   {
+     robotw.moveHorizontally(- eax);
+   }
+   else  if(direccionT.image.equals("east"))
+   {
+     robotw.moveHorizontally(eax);
+   }
+    else if(direccionT.image.equals("north"))
+   {
+     robotw.moveVertically(eax);
+   }
+     else if(direccionT.image.equals("south"))
+   {
+     robotw.moveVertically(-eax);
+   }
   }
 
 //Move general
@@ -675,7 +576,7 @@ Token variableToken =  new Token();
   Token num = new Token();
     jj_consume_token(move);
     jj_consume_token(51);
-    jj_consume_token(numero);
+    num = jj_consume_token(numero);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case toThe:
       moveT();
@@ -688,14 +589,13 @@ Token variableToken =  new Token();
       move();
       break;
     default:
-      jj_la1[21] = jj_gen;
+      jj_la1[14] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
-    num = jj_consume_token(numero);
-     eax = Integer.parseInt(num.image);
   }
 
+//----------------------------------------------------------------------------------------------------------------------
   final public void controlStructure() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case IF:
@@ -708,7 +608,7 @@ Token variableToken =  new Token();
       RepeatTimes();
       break;
     default:
-      jj_la1[22] = jj_gen;
+      jj_la1[15] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -749,7 +649,7 @@ Token variableToken =  new Token();
       jj_consume_token(name);
       break;
     default:
-      jj_la1[23] = jj_gen;
+      jj_la1[16] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -774,7 +674,7 @@ Token variableToken =  new Token();
       not();
       break;
     default:
-      jj_la1[24] = jj_gen;
+      jj_la1[17] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -797,7 +697,7 @@ Token variableToken =  new Token();
       jj_consume_token(west);
       break;
     default:
-      jj_la1[25] = jj_gen;
+      jj_la1[18] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -815,7 +715,7 @@ Token variableToken =  new Token();
       jj_consume_token(name);
       break;
     default:
-      jj_la1[26] = jj_gen;
+      jj_la1[19] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -829,7 +729,7 @@ Token variableToken =  new Token();
       jj_consume_token(Chips);
       break;
     default:
-      jj_la1[27] = jj_gen;
+      jj_la1[20] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -847,7 +747,7 @@ Token variableToken =  new Token();
       jj_consume_token(name);
       break;
     default:
-      jj_la1[28] = jj_gen;
+      jj_la1[21] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -861,7 +761,7 @@ Token variableToken =  new Token();
       jj_consume_token(Chips);
       break;
     default:
-      jj_la1[29] = jj_gen;
+      jj_la1[22] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -885,7 +785,7 @@ Token variableToken =  new Token();
       jj_consume_token(west);
       break;
     default:
-      jj_la1[30] = jj_gen;
+      jj_la1[23] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -908,7 +808,7 @@ Token variableToken =  new Token();
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[31];
+  final private int[] jj_la1 = new int[24];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -916,10 +816,10 @@ Token variableToken =  new Token();
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x0,0x7ed20000,0x7ed20000,0x7e020000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x18000,0x0,0x18000,0x0,0x18000,0x0,0x18000,0x0,0x0,0x0,0x0,0xd00000,0x0,0x0,0x0,0x0,0x18000,0x0,0x18000,0x0,};
+      jj_la1_0 = new int[] {0x1000,0x0,0x0,0x7ed20000,0x7e020000,0x0,0x0,0x0,0x0,0x18000,0x0,0x18000,0x0,0x0,0x0,0xd00000,0x0,0x0,0x0,0x0,0x18000,0x0,0x18000,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x8000,0x18000,0x18000,0x18000,0x18000,0x18000,0x38,0x38,0x3c0,0x3c0,0x18000,0x0,0x18000,0x0,0x18000,0x0,0x18000,0x0,0x38,0x38,0x3c0,0x18006,0x0,0x18000,0x7c00,0x3c0,0x18000,0x0,0x18000,0x0,0x3c0,};
+      jj_la1_1 = new int[] {0x0,0x20000,0x40000,0x18000,0x18000,0x18000,0x38,0x3c0,0x18000,0x0,0x18000,0x0,0x38,0x3c0,0x18006,0x0,0x18000,0x7c00,0x3c0,0x18000,0x0,0x18000,0x0,0x3c0,};
    }
 
   /** Constructor with InputStream. */
@@ -933,7 +833,7 @@ Token variableToken =  new Token();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -947,7 +847,7 @@ Token variableToken =  new Token();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -957,7 +857,7 @@ Token variableToken =  new Token();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -967,7 +867,7 @@ Token variableToken =  new Token();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -976,7 +876,7 @@ Token variableToken =  new Token();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -985,7 +885,7 @@ Token variableToken =  new Token();
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 31; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -1041,7 +941,7 @@ Token variableToken =  new Token();
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 31; i++) {
+    for (int i = 0; i < 24; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

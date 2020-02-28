@@ -119,8 +119,6 @@ private int jjMoveStringLiteralDfa0_0()
 {
    switch(curChar)
    {
-      case 32:
-         return jjMoveStringLiteralDfa1_0(0x2L);
       case 44:
          return jjStopAtPos(0, 49);
       case 58:
@@ -191,10 +189,6 @@ private int jjMoveStringLiteralDfa1_0(long active0)
    }
    switch(curChar)
    {
-      case 32:
-         if ((active0 & 0x2L) != 0L)
-            return jjStopAtPos(1, 1);
-         break;
       case 65:
       case 97:
          return jjMoveStringLiteralDfa2_0(active0, 0x3d0010009000L);
@@ -839,7 +833,7 @@ public Token getNextToken()
    }
 
    try { input_stream.backup(0);
-      while (curChar <= 13 && (0x2600L & (1L << curChar)) != 0L)
+      while (curChar <= 32 && (0x100002600L & (1L << curChar)) != 0L)
          curChar = input_stream.BeginToken();
    }
    catch (java.io.IOException e1) { continue EOFLoop; }
