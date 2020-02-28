@@ -139,7 +139,7 @@ public interface RobotParserConstants {
     "\"of\"",
     "\"toThe\"",
     "\"inDir\"",
-    "\"rigth\"",
+    "\"right\"",
     "\"left\"",
     "\"around\"",
     "\"north\"",

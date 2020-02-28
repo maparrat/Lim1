@@ -24,13 +24,45 @@ import java.io.*;
 @SuppressWarnings("serial")
 public class RobotParser 
 {
-
+   class Variable {
+	
+	
+	private String nombre; 
+	
+	private Integer numero;
+	
+	
+	public Variable( String pNombre)
+	{
+		nombre = pNombre;
+		numero = 0;	
+	
+		
+	}
+	
+	public String getNombre() {
+		return nombre;
+	}
+	public Integer getNumero() {
+		return numero;
+	}
+	
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
+	public void setNumero(Integer numero) {
+		this.numero = numero;
+	}
+}
 
 	private RobotWorldDec robotw;
-	
+	 private Variable[] store;
+	 private int eax;
 	
 	void setWorld(RobotWorld w) {
-		robotw = (RobotWorldDec) w;	
+		robotw = (RobotWorldDec) w;
+		 store = new Variable[100];
 	}
 
     void delay(int d) {
@@ -107,7 +139,7 @@ TOKEN: /*Control Estructure*/
 TOKEN: /*direcciones*/
 
 {
-  <rigth:"rigth">
+  <rigth:"right">
   |< left:"left" >
   |< around: "around" >
   | < north:"north" >
@@ -136,18 +168,20 @@ TOKEN: /*nombres*/
 	boolean instructions(StringBuffer system) :
 	{	
 				String output=new String();
+			
 		
 	}
 	{
 	  secuencia()
+	  {
+	 
+	    return true;
+	  }
 	}
 	
 void secuencia():
 {
- 
-  Variable [] store = Variable[100];
- 
-	     
+     
 }
 {
   < ROBOT_R><VARS >var() instrucion()
@@ -157,12 +191,35 @@ void var():
 
 }
 {
-  < name>","(< name >)*
-  //TODO logic
-  {
-    
-  }
+  
+  varF()","(varF())*
 
+
+
+
+}
+void varF():
+{
+Token variableToken =  new Token();
+}
+{
+  < name >
+  (variableToken =   < name >)
+ {
+	  String cadena  = variableToken.image;
+   boolean encontro = false;
+   int contador = 0;
+   while (encontro == false)
+   {
+     if(store[contador] ==   null )
+     {
+       Variable variablex= new Variable(cadena);
+       store[contador] = variablex;
+     }
+     contador++;
+   }
+  
+ }
 }
 void instrucion():
 {
@@ -190,11 +247,12 @@ void command():
  |moveTD()
 
  |< skip >
- //TODO logica skip
+
  { }   
 }
 void assing():
 {
+ 
   int numero = 0;
   Token tokenNombre; 
   Token tokenNumero;
@@ -210,17 +268,19 @@ void assing():
     
 	try
 	{
-	  pNumero = Integer.parseInt(tokenNumero);
-	  
-	  Variable vacia = new Variable(pNumero, tokenNombre );
-
-	  for(int i = 0; i < store.length; i++)
-	  {
-	    if( store[i] == null)
-	    {
-	      store[i] = vacia;
-	    }
-	  }
+	  int  pNumero = Integer.parseInt(tokenNumero.image);
+	  boolean encontro = false;
+	  int contador = 0; 
+	 while(encontro = false ||contador < store.length )
+	 {
+	   if(store[contador].getNombre() == tokenNombre.image)
+	   {
+	     store[contador].setNumero(pNumero);
+	     encontro = true;
+	     
+	   }
+		contador++;
+	 }
 	  
 	}
 	catch(Exception e)
@@ -234,60 +294,237 @@ void assing():
 }
 void move():
 {
+  Token nmovimientos = new Token() ;
+  
 }
 {
  (< numero>|< name>)
- //TODO  completar logica
+ (nmovimientos = < numero>|< name>)
+
  {
+   try
+   {
+     int movimiento = Integer.parseInt(nmovimientos.image);
+   
+      robotw.moveForward(movimiento); 
+   
+   }
+   catch (NumberFormatException excepcion)
+   {
+    int contador = 0;
+    boolean encontro = true;
+    int veces = 0; 
+    while( contador < store.length|| encontro == false)
+    {
+      if(store[contador].getNombre().equals(nmovimientos.image))
+      {
+        veces = store[contador].getNumero();
+        if (veces != 0)
+        {
+           robotw.moveForward(veces); 
+        }
+        encontro = true;
+      }
+      contador ++;
+      
+    }
+   }
  }
 }
 void turn():
 {
+  Token direccionT = new Token();  
 }
 {
  < turn >":" (< rigth>| < left>| < around >)
- //TODO  completar logica
+ (direccionT = < rigth>| < left>| < around >)
+
  {
+   String direccion= direccionT.image;
+   if(direccion.equals("right"))
+   {
+	robotw.turnRight();
+   }
+   else if (direccion.equals("left"))
+   {
+     robotw.turnRight();
+     robotw.turnRight();
+     robotw.turnRight();
+   }
+      else if (direccion.equals("around"))
+   {
+     robotw.turnRight();
+     robotw.turnRight();
+ 
+   }
  }
 }
 void face():
 {
+  Token direccionT = new Token();  
   
 }
 {
  < face>":"(< north>| < south>| < east >| < west>)
- //TODO  completar logica
+  (direccionT = < north>| < south>| < east >| < west>)
+
  {
+   String direccion= direccionT.image;
+   if(direccion.equals("north"))
+   {
+     robotw.facingNorth();
+   }
+    else  if(direccion.equals("south"))
+   {
+     robotw.facingSouth();
+   }
+    else if(direccion.equals("west"))
+   {
+     robotw.facingWest();
+   }
+    else if(direccion.equals("east"))
+   {
+     robotw.facingEast();
+   }
+   
  }
 }
 void put():
 {
-  
+  Token cantidadT = new Token();
+  Token objetoT = new Token();
 }
 {
- < put >":"(< numero>|< name>)< of >":"(<Balloons >| < Chips>) 
- //TODO completar logica
+ < put >":"(< numero>|< name>)< of >":"(<Balloons >| < Chips>)
+ (cantidadT =< numero>|< name> )
+ (objetoT = <Balloons >| < Chips>)   
+
  {
+   try
+   {
+      int  pNumero = Integer.parseInt(cantidadT.image);
+     
+      
+        if(objetoT.image.equals("Balloons"))
+        {
+          robotw.putBalloons(pNumero);
+        }
+        else  if(objetoT.image.equals("Chips"))
+        {
+          robotw.putChips(pNumero);
+        }
+     
+   }
+  catch (NumberFormatException excepcion)
+   {
+     int numero =0;
+     boolean encontrado = false; 
+     for(int i = 0; i < store.length|| encontrado == false; i++)
+     {
+       if(store[i].getNombre().equals(cantidadT.image))
+       {
+         
+          if(objetoT.image.equals("Balloons"))
+        {
+          robotw.putBalloons(store[i].getNumero());
+        }
+        else  if(objetoT.image.equals("Chips"))
+        {
+          robotw.putChips(store[i].getNumero());
+        }
+        
+         encontrado = true;
+       }
+     }
+   }
    
  }
 }
 void pick():
 {
+   Token cantidadT = new Token();
+  Token objetoT = new Token();
+
 }
 {
- < pick >":"(< numero>|< name>)< of >":"(<Balloons >| < Chips>) 
- //TODO completar logica
+ < pick >":"(< numero>|< name>)< of >":"(<Balloons >| < Chips>)
+  (cantidadT =< numero>|< name> )
+ (objetoT = <Balloons >| < Chips>)
+
  {
+   try
+   {
+      int  pNumero = Integer.parseInt(cantidadT.image);
+     
+      
+        if(objetoT.image.equals("Balloons"))
+        {
+          robotw.grabBalloons(pNumero);
+        }
+        else  if(objetoT.image.equals("Chips"))
+        {
+          robotw.pickChips(pNumero);
+        }
+     
+   }
+  catch (NumberFormatException excepcion)
+   {
+     int numero =0;
+     boolean encontrado = false; 
+     for(int i = 0; i < store.length|| encontrado == false; i++)
+     {
+       if(store[i].getNombre().equals(cantidadT.image))
+       {
+         
+          if(objetoT.image.equals("Balloons"))
+        {
+          robotw.grabBalloons(store[i].getNumero());
+        }
+        else  if(objetoT.image.equals("Chips"))
+        {
+          robotw.pickChips(store[i].getNumero());
+        }
+        
+         encontrado = true;
+       }
+     }
+   }
  }
 }
 void moveT():
 {
+  Token direccionT = new Token();
 }
 {
- <toThe>":" (< rigth>| < left>| < around >) 
+ <toThe>":" (< rigth>| < left>| < around >)
+ (direccionT = < rigth>| < left>| < around >)
  //TODO completar logica
  {
-   
+
+   if(robotw.getOrientation() == 0)
+   {
+     robotw.facingNorth();
+     robotw.moveForward(eax);
+     
+   }
+      if(robotw.getOrientation() == 1)
+   {
+     robotw.facingSouth();
+     robotw.moveForward(eax);
+     
+   }
+      if(robotw.getOrientation() == 2)
+   {
+     robotw.facingEast();
+     robotw.moveForward(eax);
+     
+   }
+      if(robotw.getOrientation() == 3)
+   {
+     robotw.facingWest();
+     robotw.moveForward(eax);
+     
+   }
  }
 }
 void moveD():
@@ -303,9 +540,14 @@ void moveD():
 //Move general
 void moveTD():
 {
+  Token num = new Token();
 }
 {
    < move>":"< numero >(moveT()|moveD()|move())
+   (num = < numero>)
+   {
+     eax = Integer.parseInt(num.image);
+   }
 }
 
 void controlStructure():
