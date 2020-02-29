@@ -1,6 +1,6 @@
 /*
 Basic Robot Grammar
-Author: Miguel Parra- Daniel  Londoño
+Author: Miguel Parra - Daniel  LondoÃ±o
 //danielslondonob
  **/
 
@@ -19,12 +19,16 @@ package uniandes.lym.robot.control;
 
 import uniandes.lym.robot.kernel.*;
 import java.io.*;
+import java.util.ArrayList;
 
 
 @SuppressWarnings("serial")
 public class RobotParser 
 {
    class Variable {
+
+    private ArrayList variables = new ArrayList();
+	private ArrayList valores = new ArrayList();
 	
 	
 	private String nombre; 
@@ -125,7 +129,7 @@ TOKEN: /*Control Estructure*/
 }
  TOKEN: /*comandos*/
 {
- 	< assing: "assing">
+ 	< assign: "assign">
 	| < move: "move">
   	| < turn: "turn">
   	| < face:"face">
@@ -146,6 +150,7 @@ TOKEN: /*direcciones*/
   | < south:"south" >
   | < east: "east" >
   | < west: "west" >
+  | < frontBack: "front" | "back"  >
 }
 
 TOKEN: /*Condiciones*/
@@ -162,6 +167,7 @@ TOKEN: /*nombres*/
 {
  < name:["A"-"Z"] (["a"-"z"]["0"-"9"])* >
 | < numero:["0"-"9"] (["0"-"9"])* >
+|  < objeto: "Balloons" | "Chips" >
 }
  
 
@@ -225,7 +231,7 @@ void instrucion():
 {
 }
 {
- < BEGIN >intru()(";"intru())*  
+ <BEGIN>intru()(";"intru())*  
 }
 void intru():
 {
@@ -238,7 +244,7 @@ void command():
 
 }
 {
- assing()
+ assign()
  |move()
  |turn()
  |face()
@@ -250,19 +256,59 @@ void command():
 
  { }   
 }
-void assing():
+
+void block(boolean ejecutar):
+{
+  
+}
+{
+ 	 {
+  		if(!ejecutar) {
+			Token t = getNextToken();
+			while(t.kind!= T_END) {
+				t = getNextToken();
+			}
+			return;
+		} 
+	}
+  	(
+		<BEGIN >(secuencia(ejecutar) semicolon(ejecutar)
+	  {
+	    delay(500);
+	  })+ < END >
+	)
+}
+
+void semicolon(boolean ejecutar):
+{
+  
+}
+{
+  
+	(
+	  {
+	 	if(!ejecutar) {
+			return;
+  		}
+  	  } (";")?
+	)
+
+}
+
+void assign():
 {
  
-  int numero = 0;
+  Integer numero = null;
   Token tokenNombre; 
   Token tokenNumero;
-  String nombre;
+  String nombre="";
 
 }
 {
- < assing >":"(tokenNombre=<numero>) < to>":" (tokenNumero=<name>)
+ < assign >":"(tokenNombre=<numero>) < to>":" (tokenNumero=<name>)
  //(tokenNombre=<numero>)
- //(tokenNumero=<name>)   
+ //(tokenNumero=<name>)
+   
  
  {
     
@@ -287,9 +333,13 @@ void assing():
 	{
 		  
 	}
+
 	
 	
-} 
+	
+}
+
+ 
  
 }
 void move():
@@ -442,7 +492,7 @@ void put():
 }
 void pick():
 {
-   Token cantidadT = new Token();
+  Token cantidadT = new Token();
   Token objetoT = new Token();
 
 }
@@ -529,10 +579,29 @@ void moveT():
 void moveD():
 {
    Token direccionT = new Token();
+   int valor = 0;
+   String direccion = "";
 }
 {
  <inDir>":"(direccionT =< north>| < south>| < east >| < west>)
- //TODO completar logica
+
+(
+    <move>"("( direccionT=< numero >
+    {
+      valor=Integer.parseInt(direccionT.toString());
+    } | token=< name >
+    {
+      int pos = variables.indexOf(direccionT.toString());
+  	  if(pos!=-1) {
+  	    valor=(int) valores.get(pos);
+  	  }
+  	 } ) "," direccionT=<inDir>
+  	 {
+  	    direccionF = direccionT.toString();
+  	 }")"
+  )
+
+ 
  {
    if(direccionT.image.equals("west"))
    {
@@ -573,33 +642,67 @@ void controlStructure():
 }
 void conditional():
 {
-
+	boolean x; 
 }
 {
   < IF>":" condicion()< THEN >":"intru() <ELSE > intru()
-  //TODO Completar logica
-  {
-  }
+
+  (
+	  < IF > "(" x=condicion() ","  block(x) "," block(!x) ")" 
+  )
+  
 }
 void loop():
 {
 
 }
 {
-	< WHILE >":"condicion()":" intru()
-	//TODO logica
+	< WHILE >"(" condicion() ","block(true)")"
 	{
 	}
 }
 void RepeatTimes():
 {
-
+	int i = 0;
+	Token t = new Token();
 }
 {
   < REPEAT >":" intru()< TIMES>":"(< numero >|< name >)
- //TODO logica
-{
-}
+
+ (
+	  < REPEAT >"("
+	  ( t=< numero >
+		  {
+		    i = Integer.parseInt(t.toString());
+		  }
+	  | token=< name >
+		  {
+		    int posicion = variables.indexOf(t.toString());
+		    if(posicion != -1)
+		    {
+		      i = (int)valores.get(posicion);
+		    }
+		  }
+	  ) ","
+	  
+	  {
+	    int beginline,begincol,endline,endcol;
+		t = getNextToken();
+		while(t.kind != END) {
+		  	
+			break;
+		}
+		for(int j = 0; j < i-1; j++) {
+			
+			block(true);
+			
+		}
+	    
+	  }
+	  ")"
+	  
+	)
+
 }
 
 void condicion():
@@ -613,51 +716,205 @@ void condicion():
   |not() 
 }	
 
-void facing():
+boolean facing():
 {
+  String s = "";
+  Token t = new Token();
+  boolean x;
 }
 {
   < facing >":"(< north>| < south>| < east >| < west>)
-  //TODO logica
-  {
-  }
+
+	(
+	  < face > "(" t=< facing > ")" 
+	  {
+	    s=t.toString();
+	    
+	    if(s.equals("north")&&robotw.facingNorth())
+	    {
+			x = true;
+	    }
+	    else if(s.equals("south")&&robotw.facingSouth())
+	    {
+			x =true;
+	    }
+	    else if(s.equals("west")&&robotw.facingWest())
+	    {
+			x = true;
+	    }
+	    else if(s.equals("east")&&robotw.facingEast())
+	    {
+			x = true;
+	    }
+	    else
+	    {
+ 			x = false;
+	    }
+	  }
+	)
+	{
+	  return b;
+	}
+
+  
 }
 void canPut():
 {
+
+  Token t = new Token();
+  String s = "";
+  int i = 0;
+  boolean b;
 }
 {
-  < canPut >":"(< numero >|< name >) < of >":"(<Balloons >| < Chips>)
-  //TODO logica
-  {
+  < canPut >":"(< numero >|< name >) < of >":"(objetoT = <Balloons >| < Chips>)
+    	< canPut > "(" t= < objeto >
+  	{
+  	  s = token.toString();
+  	}
+  	  "," 
+      ( token=< numero >
+		  {
+		    i=Integer.parseInt(t.toString());
+		  }
+	  | token=< name >
+		  {
+		    int posicion = variables.indexOf(t.toString());
+		    if(posicion!=-1) {
+		      i=(int)valores.get(posicion);
+		    }
+		  }
+	  ) ")"
+	  {
+	    if(s.equals("Baloons"))
+	    {
+	     if(robotw.getMyBalloons() < i )
+	     {
+	        b= false;
+	     }
+	     else
+	     {
+			b= true;
+	     }
+			 	      
+	    }
+	    else if
+	    (s.equals("Chips"))
+	    {
+			if(robotw.getMyChips()< valor)
+			{
+	        	b= false;
+	     	}
+	     	else
+	     	{
+				b= true;
+	     	}
+	     }
+	     b= false;
 
-  }
+	     return b;
+	  }
 }
 void canPick():
 {
+  Token t = new Token();
+  int i = 0;
+  String s = "";
 }
 {
   < canPick >":"(< numero >|< name >) < of >":"(<Balloons >| < Chips>)
-  //TODO logica
+  (
+    <canPick>"("t=< objeto >
+    {
+      s = t.toString();
+    }"," ( t = < numero >
+    {
+      i = Integer.parseInt(t.toString());
+    } | t = < name >
+    {
+      int posicion = variables.indexOf(t.toString());
+  	  if(posicion!=-1)
+  	  {
+  	    i = (int)valores.get(posicion);
+  	  }
+  	} )")"
+  )
   {
-
+	if(s.equals("Balloons"))
+	{
+		for(int i = 0; i < valor; i++)
+		{
+			robotw.pickBalloon();
+		}
+	}
+	else if (object.equals("Chips"))
+	{
+		for(int i = 0; i <valor; i++)
+		{ 
+			robotw.pickChip();
+		}
+	}	
   }
 }
 void canMove():
 {
+  Token t = new Token();
+  int numero = 0;
+  String dir = "";
 }
 {
   < canMove >":"(< north>| < south>| < east >| < west>)
-  //TODO logica
-  {
 
+  (
+    <move >"("( token=< numero >
+    {
+      numero=Integer.parseInt(t.toString());
+    } | t=< name >
+    {
+      int posicion = variables.indexOf(t.toString());
+  	  if(posicion!=-1) {
+  	    numero=(int) valores.get(pos);
+  	  }
+  	 } ) "," t=< frontBack >
+  	 {
+  	    dir = t.toString();
+  	 }")"
+  )
+  {
+    if(dir.equals("left"))
+    {
+      for(int i = 0; i < numero; i++)
+      {
+			robotw.moveWest();
+      }
+    }
+    else if(dir.equals("right"))
+    {
+      for(int i = 0; i < numero; i++) {
+			robotw.moveEast();
+      }
+    }
+    else if(direccion.equals("front")) {
+      for(int i = 0; i < numero; i++) {
+			robotw.moveNorth();
+
+      }
+    }else if(direccion.equals("back")) {
+      for(int i = 0; i < numero; i++) {
+			robotw.moveSouth();
+      }
+    }
   }
 }
-void not():
+boolean not():
 {
+  boolean b;
 }
 {
-  < not >":" condicion()
-  //TODO logica
+  (
+	<not> "(" b=condicion() ")"
+  )
   {
+		return !b;
   }
 }

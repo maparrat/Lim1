@@ -51,7 +51,7 @@ public interface RobotParserConstants {
   /** RegularExpression Id. */
   int ELSE = 24;
   /** RegularExpression Id. */
-  int assing = 25;
+  int assign = 25;
   /** RegularExpression Id. */
   int move = 26;
   /** RegularExpression Id. */
@@ -85,19 +85,23 @@ public interface RobotParserConstants {
   /** RegularExpression Id. */
   int west = 41;
   /** RegularExpression Id. */
-  int facing = 42;
+  int frontBack = 42;
   /** RegularExpression Id. */
-  int canPut = 43;
+  int facing = 43;
   /** RegularExpression Id. */
-  int canPick = 44;
+  int canPut = 44;
   /** RegularExpression Id. */
-  int canMove = 45;
+  int canPick = 45;
   /** RegularExpression Id. */
-  int not = 46;
+  int canMove = 46;
   /** RegularExpression Id. */
-  int name = 47;
+  int not = 47;
   /** RegularExpression Id. */
-  int numero = 48;
+  int name = 48;
+  /** RegularExpression Id. */
+  int numero = 49;
+  /** RegularExpression Id. */
+  int objeto = 50;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -129,7 +133,7 @@ public interface RobotParserConstants {
     "\"if\"",
     "\"while\"",
     "\"else\"",
-    "\"assing\"",
+    "\"assign\"",
     "\"move\"",
     "\"turn\"",
     "\"face\"",
@@ -146,6 +150,7 @@ public interface RobotParserConstants {
     "\"south\"",
     "\"east\"",
     "\"west\"",
+    "<frontBack>",
     "\"facing\"",
     "\"canPut\"",
     "\"canPick\"",
@@ -153,9 +158,12 @@ public interface RobotParserConstants {
     "\"not\"",
     "<name>",
     "<numero>",
+    "<objeto>",
     "\",\"",
     "\";\"",
     "\":\"",
+    "\"(\"",
+    "\")\"",
   };
 
 }

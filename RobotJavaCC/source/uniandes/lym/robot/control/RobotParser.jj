@@ -19,6 +19,7 @@ package uniandes.lym.robot.control;
 
 import uniandes.lym.robot.kernel.*;
 import java.io.*;
+import java.util.ArrayList;
 
 
 @SuppressWarnings("serial")
@@ -585,7 +586,7 @@ void moveD():
  <inDir>":"(direccionT =< north>| < south>| < east >| < west>)
 
 (
-    <move>"("( direcccionT=< numero >
+    <move>"("( direccionT=< numero >
     {
       valor=Integer.parseInt(direccionT.toString());
     } | token=< name >

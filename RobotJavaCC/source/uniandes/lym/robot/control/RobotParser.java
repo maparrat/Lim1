@@ -603,7 +603,7 @@ Token variableToken =  new Token();
     jj_consume_token(54);
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case numero:
-      direcccionT = jj_consume_token(numero);
+      direccionT = jj_consume_token(numero);
       valor=Integer.parseInt(direccionT.toString());
       break;
     case name:
