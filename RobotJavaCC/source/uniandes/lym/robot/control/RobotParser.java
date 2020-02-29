@@ -19,6 +19,7 @@ package uniandes.lym.robot.control;
 
 import uniandes.lym.robot.kernel.*;
 import java.io.*;
+import java.util.ArrayList;
 
 
 @SuppressWarnings("serial")
@@ -27,7 +28,7 @@ public class RobotParser
    class Variable {
 
     private ArrayList variables = new ArrayList();
-	private ArrayList valores = new ArrayList();
+    private ArrayList valores = new ArrayList();
 	
 	
 	private String nombre; 
